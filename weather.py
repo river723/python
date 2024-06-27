@@ -9,6 +9,14 @@ headers={
 response = requests.get(url, headers=headers)
 response.encoding="utf-8"
 et=etree.HTML(response.text)
-divs=et.xpath('//*[@id="around"]/div[@class="aro_city"]/ul/li[2]/a/span/text()')
+# divs=et.xpath("//div[@class='w_city city_guonei']/dl[1]/dd/a/text()")
+# print(divs)
 
-print(divs)
+# for div in divs:
+#     tem=div.xpath('./span/text()')
+#     print(tem)
+lis=et.xpath('//*[@id="around"]/div[@class="aro_city"]/ul/li')
+for li in lis:
+    city=li.xpath('./a/span/text()')
+    temp=li.xpath('./a/i/text()')
+    print(city,temp)
