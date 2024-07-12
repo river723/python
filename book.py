@@ -19,15 +19,17 @@ def get_everyone_url(url):
 
 async def down_book(url):
     async with aiohttp.ClientSession() as session:
+
         async with session.get(url) as resp:
-            html=await resp.text()
+
+            html=await resp.text(encoding='gbk')
             tree=etree.HTML(html)
             book_name=tree.xpath('//div[@class="section-opt"]/h1/text()')[0]
-            print(book_name)
-            content=tree.xpath('//div[@id="content"]/text()')
-            print(content)
+            content=tree.xpath('//div[@id="content"]/text()')[0]
+            async with open('./book/'+book_name+'.txt','w',encoding='utf-8') as f:
+                 await f.write(content)
 
-def main():
+async def main():
     url='https://www.biquge635.com/book/53041/'
     url_list=get_everyone_url(url)
     tasks=[]
@@ -35,9 +37,9 @@ def main():
         t=asyncio.create_task(down_book(url))
         tasks.append(t)
         break
-    asyncio.wait(tasks)
-    asyncio.run(main())
+    await asyncio.wait(tasks)
+
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
