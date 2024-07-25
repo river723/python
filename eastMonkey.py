@@ -1,6 +1,7 @@
 import requests
 import re
 import execjs
+import json
 cookies = {
     'qgqp_b_id': 'bea1524725e39936123e5b6d7cd5155e',
     'websitepoptg_api_time': '1721718049290',
@@ -28,12 +29,7 @@ headers = {
     'sec-ch-ua-platform': '"Windows"',
 }
 
-# https://guba.eastmoney.com/rank/
-# response = requests.get(
-#     'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&np=3&ut=a79f54e3d4c8d44e494efb8f748db291&invt=2&secids=1.600030,1.600611,1.600686,1.600171,0.002611,1.600187,0.000712,1.600650,0.000158,1.600733,1.601398,0.000550,1.603005,0.300077,0.002869,0.300240,0.002232,0.300713,1.600817,0.300960&fields=f1,f2,f3,f4,f12,f13,f14,f152,f15,f16&cb=qa_wap_jsonpCB1721718133048',
-#     cookies=cookies,
-#     headers=headers,
-# )
+
 params = {
     'type': '0',
     'sort': '0',
@@ -42,5 +38,32 @@ params = {
 }
 
 response = requests.get('https://gbcdn.dfcfw.com/rank/popularityList.js', params=params, headers=headers)
-data=re.findall(r"var popularityList='(.*)'", response.text)
-print(data)
+data=re.findall(r"var popularityList='(.*)'", response.text)[0]
+# print(data)
+
+jscode=open('eastMonkey_jscode.js', 'r', encoding='utf-8').read()
+ctx = execjs.compile(jscode)
+scriptdata=ctx.call('main123', data)
+# print(scriptdata)
+t_list = []
+for i in scriptdata:
+    t_list.append(i['code'])
+t_str = ','.join(t_list)
+print(t_str)
+print('------------------')
+secId=ctx.call('getHQSecIdByMutiCode',t_str)
+# print(secId)
+
+# https://guba.eastmoney.com/rank/
+jsonp_response = requests.get(
+    'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&np=3&ut=a79f54e3d4c8d44e494efb8f748db291&invt=2&secids='+secId+'&fields=f1,f2,f3,f4,f12,f13,f14,f152,f15,f16&cb=qa_wap_jsonpCB1721718133048',
+    cookies=cookies,
+    headers=headers,
+).text
+start = jsonp_response.find('(') + 1
+end = jsonp_response.rfind(')')
+json_data = jsonp_response[start:end]
+data = json.loads(json_data)
+data_list = data['data']['diff']
+for i in data_list:
+    print(i)
