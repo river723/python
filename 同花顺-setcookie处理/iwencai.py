@@ -1,8 +1,14 @@
 import requests
+import execjs
+
+with open('getcookie.js', 'r', encoding='utf-8') as f:
+    jscode = f.read()
+ctx = execjs.compile(jscode)
+v=ctx.call('main123')
 
 cookies = {
     'ta_random_userid': 'kkg2mk6ojl',
-    'v': 'A12vZmbG52jC8YNs109gUyCmbDJSepoYm671wx8mmbTj1nOs58qhnCv-BVus',
+    'v': v,
 }
 
 headers = {
@@ -47,3 +53,4 @@ response = requests.post(
 ).json()
 
 print(response)
+
