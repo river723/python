@@ -1262,3 +1262,89 @@ console.log(window.DDDD())
 function main123() {
     return window.DDDD()
 }
+
+function $_BEB(t, e) {
+    Ut = [
+        39,
+        38,
+        48,
+        49,
+        41,
+        40,
+        46,
+        47,
+        35,
+        34,
+        50,
+        51,
+        33,
+        32,
+        28,
+        29,
+        27,
+        26,
+        36,
+        37,
+        31,
+        30,
+        44,
+        45,
+        43,
+        42,
+        12,
+        13,
+        23,
+        22,
+        14,
+        15,
+        21,
+        20,
+        8,
+        9,
+        25,
+        24,
+        6,
+        7,
+        3,
+        2,
+        0,
+        1,
+        11,
+        10,
+        4,
+        5,
+        19,
+        18,
+        16,
+        17
+    ]
+    var $_DAHHD = mwbxQ.$_DW()[3][13];
+    for (; $_DAHHD !== mwbxQ.$_DW()[9][11]; ) {
+        switch ($_DAHHD) {
+            case mwbxQ.$_DW()[6][13]:
+                t = t[$_CJFt(52)],
+                    e = e[$_CJES(52)];
+                var n = t[$_CJES(18)]
+                    , r = t[$_CJFt(77)]
+                    , i = h[$_CJES(50)]($_CJFt(16));
+                i[$_CJES(18)] = n,
+                    i[$_CJES(77)] = r;
+                var o = i[$_CJFt(55)]($_CJES(68));
+                $_DAHHD = mwbxQ.$_DW()[6][12];
+                break;
+            case mwbxQ.$_DW()[9][12]:
+                o[$_CJFt(64)](t, 0, 0);
+                var s = e[$_CJES(55)]($_CJFt(68));
+                e[$_CJFt(77)] = r,
+                    e[$_CJFt(18)] = 260;
+                for (var a = r / 2, _ = 0; _ < 52; _ += 1) {
+                    var c = Ut[_] % 26 * 12 + 1
+                        , u = 25 < Ut[_] ? a : 0
+                        , l = o[$_CJES(34)](c, u, 10, a);
+                    s[$_CJFt(49)](l, _ % 26 * 10, 25 < _ ? a : 0);
+                }
+                $_DAHHD = mwbxQ.$_DW()[0][11];
+                break;
+        }
+    }
+}
