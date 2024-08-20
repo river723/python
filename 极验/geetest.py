@@ -1,17 +1,19 @@
 # 得到gt和challenge
 # https://www.geetest.com/demo/gt/register-slide?t=1723790919478
+import io
 
 from PIL import Image
 import numpy as np
 import requests
+import ddddocr
 
-res = requests.get('https://static.geetest.com/pictures/gt/d401d55fc/bg/0c7243c39.webp')
+# 获取背景图片
+res = requests.get('https://static.geetest.com/pictures/gt/09b7341fb/bg/f9e454994.webp')
 with open('bg.png', 'wb') as f1:
     f1.write(res.content)
 
 
-
-
+'''处理乱序背景图片'''
 def process_image(t_path, e_path):
     # 定义一个数组，用于存储图像片段的顺序
     order = [
@@ -41,26 +43,42 @@ def process_image(t_path, e_path):
     # 保存结果图像
     new_img.save('bg1.png')
 
+
 # 示例调用
 process_image('bg.png', 'bg1.png')
 
+'''得到滑块图片'''
+res1 = requests.get('https://static.geetest.com/pictures/gt/09b7341fb/slice/f9e454994.png')
+with open('slice.png', 'wb') as f2:
+    f2.write(res1.content)
 
+#
+# with open('slice.png', 'rb') as f1:
+#     slice_bytes=f1.read()
+# img_slice=Image.open(io.BytesIO(slice_bytes))
+#
+# with open('bg1.png', 'rb') as f2:
+#     bg_bytes=f2.read()
+# img_bg=Image.open(io.BytesIO(bg_bytes))
 
-#
-# def process_image(source_image_path, output_image_name):
-#     # Open the source image
-#     source_image = Image.open(source_image_path)
-#
-#     # Create a new canvas with the same size as the source image
-#     canvas = Image.new("RGB", source_image.size)
-#
-#     # Call the decryptAndDraw function to process the image
-#     decrypt_and_draw(canvas, source_image)
-#
-#     # Convert the canvas to RGB mode for JPEG format
-#     rgb_canvas = canvas.convert("RGB")
-#
-#     # Save the processed image
-#     rgb_canvas.save(output_image_name)
-#
-# process_image("bg.png", "bg1.png")
+with Image.open('slice.png') as s_img:
+    # 创建一个字节流对象
+    slice_byte_stream = io.BytesIO()
+    # 将图片保存到字节流中
+    s_img.save(slice_byte_stream, format='PNG')
+    # 获取字节流的内容
+    slice_png_bytes = slice_byte_stream.getvalue()
+
+with Image.open('bg1.png') as b_img:
+    # 创建一个字节流对象
+    bg1_byte_stream = io.BytesIO()
+    # 将图片保存到字节流中
+    b_img.save(bg1_byte_stream, format='PNG')
+    # 获取字节流的内容
+    bg1_png_bytes = bg1_byte_stream.getvalue()
+
+det=ddddocr.DdddOcr(det=False,ocr=False)
+res=det.slide_match(slice_png_bytes, bg1_png_bytes,simple_target=True)
+# 得到滑动距离
+x=res['target'][0]
+print(x)
